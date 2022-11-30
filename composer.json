@@ -1,5 +1,5 @@
 {
-    "name": "ammarfaizi2/brainly",
+    "name": "buchin/brainly",
     "description": "Brainly",
     "type": "library",
     "license": "MIT",
@@ -7,6 +7,10 @@
         {
             "name": "Ammar Faizi",
             "email": "ammarfaizi2@gmail.com"
+        },
+        {
+            "name": "Mochammad Masbuchin",
+            "email": "buchin@dojo.cc"
         }
     ],
     "minimum-stability": "stable",
