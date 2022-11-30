@@ -16,6 +16,12 @@ if (!defined("CACHE_EXPIRED")) {
  */
 final class Brainly
 {
+	public $domains = [
+		'id' => 'co.id',
+		'ph' => 'ph'
+	];
+
+	public $lang = 'id';
 
   /**
    * @var string
@@ -85,7 +91,7 @@ final class Brainly
    *
    * Constructor.
    */
-  public function __construct($query, $first = 100, $after = null)
+  public function __construct($query, $first = 100, $after = null, $lang = 'id')
   {
     $this->query      = strtolower(trim($query));
     $this->hash       = sha1($query);
@@ -95,6 +101,7 @@ final class Brainly
     $this->cacheFile  = "{$this->cacheDir}/{$this->hash}.json.gz";
     $this->first      = $first;
     $this->after      = $after;
+	$this->lang = $lang;
 
     /* Make sure dataDir exists and is writeable. */
     is_dir($this->dataDir) or mkdir($this->dataDir);
@@ -174,7 +181,9 @@ final class Brainly
     go_curl:
     $tryCount++;
 
-    $ch = curl_init("https://brainly.co.id/graphql/id?op=SearchQuery");
+	$url = "https://brainly." . $this->domains[$this->lang] . "/graphql/" . $this->lang . "?op=SearchQuery";
+
+    $ch = curl_init($url);
     curl_setopt_array($ch,
       [
         CURLOPT_HTTPHEADER     => [
@@ -189,7 +198,7 @@ final class Brainly
         CURLOPT_POST           => true,
         CURLOPT_POSTFIELDS     => $this->buildQuery(),
         CURLOPT_USERAGENT      => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0",
-        CURLOPT_REFERER        => "https://brainly.co.id/app/ask?entry=top&q=".urlencode($this->query),
+        CURLOPT_REFERER        => "https://brainly." . $this->domains[$this->lang] . "/app/ask?entry=top&q=".urlencode($this->query),
         CURLOPT_COOKIEJAR      => $this->cookieFile,
         CURLOPT_COOKIEFILE     => $this->cookieFile,
         CURLOPT_TIMEOUT        => 120,
